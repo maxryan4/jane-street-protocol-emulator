@@ -10,20 +10,20 @@ module cond (
   output logic       RET        // Return
 );
 
-  logic mux1_out;   
+  logic mux_out;   
   logic [2:0] sel;
   assign sel = JMPCOND[3:1];
 
   always_comb begin
     case (sel)
-      3'b001:  mux1_out = FLAGZ;   // select 1: Z
-      3'b010:  mux1_out = FLAGC;   // select 2: C
-      3'b011:  mux1_out = FLAGN;   // select 3: N
-      default: mux1_out = 1'b1;
+      3'b001:  mux_out = FLAGZ;   // select 1: Z
+      3'b010:  mux_out = FLAGC;   // select 2: C
+      3'b011:  mux_out = FLAGN;   // select 3: N
+      default: mux_out = 1'b1;
     endcase
   end
 
-  assign JUMP = JMPCOND[0] ^ mux1_out;
+  assign JUMP = JMPCOND[0] ^ mux_out;
 
   assign RET  = JMPCOND[3:0] == 4'b1111;
 
