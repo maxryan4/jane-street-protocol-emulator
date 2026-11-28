@@ -1,0 +1,56 @@
+module pins (
+    input wire clk,
+    input wire rst_n,
+
+    // raw gpio input
+    input wire [7:0] pin_in,
+
+    // synchronised input for pio instructions
+    output logic [7:0] sampled_pins,
+
+    // gpio drive values and enables
+    output logic [7:0] pin_out,
+    output logic [7:0] pin_oe,
+
+    // pin writes from set and out instructions
+    input wire write_out,
+    input wire write_oe,
+    input wire [2:0] write_pin,
+    input wire write_value,
+
+    // side-set write on an instruction tick
+    input wire side_write,
+    input wire [2:0] side_pin,
+    input wire side_value
+);
+
+  logic [7:0] pin_in_sync_stage;
+
+  always_ff @(posedge clk) begin
+    if (!rst_n) begin
+      pin_in_sync_stage <= 8'b0;
+      sampled_pins <= 8'b0;
+      pin_out <= 8'b0;
+      pin_oe <= 8'b0;
+    end
+
+    else begin
+      pin_in_sync_stage <= pin_in;
+      sampled_pins <= pin_in_sync_stage;
+
+      if (write_out) begin
+        pin_out[write_pin] <= write_value;
+      end
+
+      if (write_oe) begin
+        pin_oe[write_pin] <= write_value;
+      end
+
+      // side-set takes priority when both writes target one pin
+      if (side_write) begin
+        pin_out[side_pin] <= side_value;
+      end
+    end
+  end
+
+endmodule
