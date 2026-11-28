@@ -1,23 +1,25 @@
-module clkdiv (
-    input wire clk,
-    input wire rst_n,
-    input wire run,
-    input wire [15:0] divider,
-    output wire tick
+module clkdiv #(
+    parameter int WIDTH = 16
+) (
+    input logic clk,
+    input logic rst_n,
+    input logic run,
+    input logic [WIDTH-1:0] divider,
+    output logic tick
 );
 
-  logic [15:0] count;
+  logic [WIDTH-1:0] count;
 
   // assert tick before its sampling edge so divider zero ticks every cycle
   assign tick = rst_n && run && (count == divider);
 
   always_ff @(posedge clk) begin
     if (!rst_n || !run || tick) begin
-      count <= 16'd0;
+      count <= '0;
     end
 
     else begin
-      count <= count + 16'd1;
+      count <= count + 1'b1;
     end
   end
 

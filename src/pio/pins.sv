@@ -1,9 +1,9 @@
 module pins (
-    input wire clk,
-    input wire rst_n,
+    input logic clk,
+    input logic rst_n,
 
     // raw gpio input
-    input wire [7:0] pin_in,
+    input logic [7:0] pin_in,
 
     // synchronised input for pio instructions
     output logic [7:0] sampled_pins,
@@ -13,15 +13,15 @@ module pins (
     output logic [7:0] pin_oe,
 
     // pin writes from set and out instructions
-    input wire write_out,
-    input wire write_oe,
-    input wire [2:0] write_pin,
-    input wire write_value,
+    input logic write_out,
+    input logic write_oe,
+    input logic [2:0] write_pin,
+    input logic write_value,
 
     // side-set write on an instruction tick
-    input wire side_write,
-    input wire [2:0] side_pin,
-    input wire side_value
+    input logic side_write,
+    input logic [2:0] side_pin,
+    input logic side_value
 );
 
   logic [7:0] pin_in_sync_stage;
